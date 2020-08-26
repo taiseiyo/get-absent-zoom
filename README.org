@@ -1,2 +1,4 @@
 - Execution method: python get-absent.py
-  - 
+  - This is a program to check the absence of zoom.
+  - You must take a screenshot of the list of participants before running the program.
+
