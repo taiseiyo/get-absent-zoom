@@ -5,9 +5,11 @@ import pyocr.builders
 from rocketchat_API.rocketchat import RocketChat
 import getpass
 
+user = "****"
 password = getpass.getpass()
-user = "***"
+
 name_list = ["***"]
+
 rocket = RocketChat(user, password, server_url='***')
 
 
@@ -15,11 +17,12 @@ def read_name():
     tools = pyocr.get_available_tools()
     tool = tools[0]  # tesseract
     langs = tool.get_available_languages()
-    lang = langs[0]  # english
+    lang_eng = langs[0]  # english
+    lang_jpn = langs[1]  # japanese
 
     txt = tool.image_to_string(
         Image.open('./photo.png'),
-        lang=lang,
+        lang=lang_eng+"+"+lang_jpn,
         builder=pyocr.builders.TextBuilder())
 
     return txt.lower()
@@ -27,7 +30,7 @@ def read_name():
 
 def trimming():
     pic = Image.open('./name.png')
-    pic.crop((50, 20, 1000, 700)).save('./photo.png', quality=100)
+    pic.crop((50, 50, 1000, 670)).save('./photo.png', quality=100)
 
 
 def make_message(pic_name):
@@ -35,19 +38,23 @@ def make_message(pic_name):
     for name in name_list:
         if(name not in pic_name):
             message.append(name)
+
     message = "\n".join(message)
     return message
 
 
 def rocket_chat_tools(message):
-    rocket.chat_post_message(message, channel="***").json()
+    # rocket.chat_post_message(message, room_id="vo4LAY9H4fPWcvfzF").json()
+    # rocket.chat_post_message(message, channel="unix").json()
+    pass
 
 
 def main():
     trimming()
     pic_name = read_name()
     message = make_message(pic_name)
-    rocket_chat_tools(message)
+    print(message)
+    # rocket_chat_tools(message)
 
 
 main()
